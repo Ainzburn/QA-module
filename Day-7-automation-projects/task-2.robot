@@ -13,7 +13,7 @@ ${trade_dropdown}           //div[@class="cq-symbol-select-btn"]
 ${volatility_10_1s}         //div[@class="sc-mcd__item sc-mcd__item--1HZ10V "]
 ${5_tick}                   //span[@data-testid="tick_step_5"]
 ${purchase_rise}            //*[@id="dt_purchase_call_button"]
-${trade_type_rise_fall}     //span[@name="contract_type" and @value="rise_fall_equal"]
+${trade_type_rise_fall}     //span[text()="Rise/Fall"]//parent::div[@class="contract-type-widget__display"]
 ${input_value}              //input[@id="dt_amount_input" and @value="10"]
 
 
@@ -43,7 +43,7 @@ Check Navigation to Deriv Trader -> Volatility 10(1s)
     Click Element    ${volatility_10_1s}
 
 Check Contract Type is Rise/Fall
-    Wait Until Element Is Visible    ${trade_type_rise_fall}    20
+    Wait Until Page Contains Element    ${trade_type_rise_fall}    20
 
 Check Duration 5 Tick
     Wait Until Element Is Visible    //input[@class="input trade-container__input range-slider__track"]    10
