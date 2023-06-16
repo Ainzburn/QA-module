@@ -27,6 +27,13 @@ ${token_name}                       //input[@name="token_name"]
 ${create_button}                    //button[@class="dc-btn dc-btn__effect dc-btn--primary dc-btn__large dc-btn__button-group da-api-token__button"]
 ${create_button_disabled}           //button[@class="dc-btn dc-btn__effect dc-btn--primary dc-btn__large dc-btn__button-group da-api-token__button" and @disabled]
 
+${token_row}                        //tr[@class="da-api-token__table-cell-row"]
+${copy_token}                       //div//*[name()='svg'and@data-testid="dt_copy_token_icon"]
+${show_token}                       //div//*[name()='svg'and@data-testid="dt_toggle_visibility_icon"]
+${token_visible}                    //p[@class="dc-text"]//parent::div[@class="da-api-token__clipboard-wrapper"]
+${delete_token}                     //div//*[name()='svg'and@data-testid="dt_token_delete_icon"]
+${confirm_delete_token}             //span[text()="Yes, delete"]//parent::button[@class="dc-btn dc-btn__effect dc-btn--primary dc-btn__large dc-dialog__button"]
+
 
 *** Test Cases ***
 Check Login
@@ -72,9 +79,6 @@ Check Scope Checkboxes
     Click Element    ${admin}
     Wait Until Page Contains Element    ${admin_active}    10
     Click Element    ${admin_active}
-    Sleep    10
-
-`
 
 Check Create Token Error if Scope are EMPTY
     Wait Until Element Is Visible    ${token_name}    10
@@ -82,8 +86,62 @@ Check Create Token Error if Scope are EMPTY
     Wait Until Element Is Visible    ${create_button_disabled}    10
     Page Should Contain Element    ${create_button_disabled}
 
+Check Create Token Error if Token Name are EMPTY
+    Wait Until Element Is Visible    ${token_name}    10
+    Press Keys    ${token_name}    CTRL+a+BACKSPACE
+    Wait Until Element Is Visible    ${create_button_disabled}    10
+    Page Should Contain Element    ${create_button_disabled}
+    Wait Until Page Contains    Please enter a token name.    10
+
 Check Create Token Error if contain INVALID characters
     Wait Until Element Is Visible    ${token_name}    10
     Input Text    ${token_name}    invalidtoke&^%$#
-    Wait Until Element Is Visible    ${create_button_disabled}`    10
+    Wait Until Element Is Visible    ${create_button_disabled}    10
     Page Should Contain Element    ${create_button_disabled}
+    Wait Until Page Contains    Only letters, numbers, and underscores are allowed.
+    Page Should Contain    Only letters, numbers, and underscores are allowed.
+
+Check Create Token Error if Token Name < 2 Characters
+    Wait Until Element Is Visible    ${token_name}    10
+    Press Keys    ${token_name}    CTRL+a+BACKSPACE
+    Input Text    ${token_name}    a
+    Wait Until Element Is Visible    ${create_button_disabled}    10
+    Page Should Contain Element    ${create_button_disabled}
+    Wait Until Page Contains    Length of token name must be between 2 and 32 characters.
+    Page Should Contain    Length of token name must be between 2 and 32 characters.
+
+Check Create Token Error if Token Name > 32 Characters
+    Wait Until Element Is Visible    ${token_name}    10
+    Press Keys    ${token_name}    CTRL+a+BACKSPACE
+    Input Text    ${token_name}    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    Wait Until Element Is Visible    ${create_button_disabled}    10
+    Page Should Contain Element    ${create_button_disabled}
+    Wait Until Page Contains    Maximum 32 characters.
+    Page Should Contain    Maximum 32 characters.
+
+Check Create Token Success if Input Valid
+    Wait Until Page Contains Element    ${read}    10
+    Click Element    ${read}
+    Wait Until Element Is Visible    ${token_name}    10
+    Press Keys    ${token_name}    CTRL+a+BACKSPACE
+    Input Text    ${token_name}    validtokenname
+    Wait Until Element Is Visible    ${create_button}    10
+    Click Element    ${create_button}
+
+Check Copy Token
+    Wait Until Page Contains Element    ${copy_token}    10
+    Scroll Element Into View    ${copy_token}
+    Click Element    ${copy_token}
+
+Check Show Token
+    Wait Until Page Contains Element    ${show_token}    10
+    Click Element    ${show_token}
+    Wait Until Page Contains Element    ${token_visible}
+
+Check Delete Token
+    Wait Until Page Contains Element    ${delete_token}    10
+    Click Element    ${delete_token}
+    Wait Until Page Contains Element    ${confirm_delete_token}    10
+    Click Element    ${confirm_delete_token}
+    Sleep    5
+    Page Should Not Contain Element    ${token_row}
