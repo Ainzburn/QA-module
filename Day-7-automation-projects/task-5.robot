@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       single test for login
+Documentation       Day 7 Automation Task 5
 
 Resource            ../login.resource
 Library             SeleniumLibrary

@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       single test for login
+Documentation       Closing Account Automation
 
 Resource            ../login.resource
 Resource            closing_variables.resource

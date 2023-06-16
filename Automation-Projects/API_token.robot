@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation       single test for login
+Documentation       API Token Automation
 
 Resource            ../login.resource
 Library             SeleniumLibrary
